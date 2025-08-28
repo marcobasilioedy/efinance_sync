@@ -1,0 +1,119 @@
+# === FRONTEND ===
+
+# Dependências de node
+node_modules/
+
+# Build de produção
+build/
+dist/
+
+# Logs
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+
+# Arquivos de configuração do sistema operacional
+.DS_Store
+Thumbs.db
+
+# Arquivos de editor (VSCode, Sublime, etc.)
+.vscode/
+.idea/
+
+# Arquivos de cache do npm
+.npm/
+
+# Arquivos de ambiente (frontend)
+.env
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+
+# Arquivos de lock (caso não queira versionar)
+package-lock.json
+yarn.lock
+
+# Testes de cobertura
+coverage/
+
+# Arquivos temporários
+*.log
+*.swp
+
+
+# === BACKEND (Python) ===
+
+# Ambientes virtuais
+venv/
+env/
+.venv/
+.env/
+
+# Bytecode do Python
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Arquivos de ambiente (backend)
+.env
+.env.*
+
+# Build e distribuição do Python
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+
+# Arquivos de setup
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Logs e dumps
+*.log
+*.out
+*.pid
+*.db
+*.sqlite3
+
+# Mypy
+.mypy_cache/
+.dmypy.json
+dmypy.json
+
+# Pytest
+.pytest_cache/
+
+# Cobertura de testes
+htmlcov/
+.tox/
+.coverage
+.coverage.*
+.cache
+nosetests.xml
+coverage.xml
+*.cover
+*.py,cover
+
+# Documentação
+docs/_build/
+
+# Banco de dados SQLite
+*.sqlite3
+
+# Ferramentas de IDE/PyCharm
+__pypackages__/
+
+# Arquivos temporários e de lock
+pip-log.txt
+pip-delete-this-directory.txt
+Pipfile.lock
+poetry.lock
