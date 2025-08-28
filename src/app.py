@@ -1,24 +1,3 @@
-# import time
-# from controllers import ProjectsController
-
-# class Application:
-#     def __init__(self):
-#         self.projects_controller = ProjectsController()
-
-#     def main(self):
-#         self.projects_controller.update_address("370")
-
-# if __name__ == "__main__":
-#     while True:
-#         try:
-#             Application().main()
-#             break
-#         except Exception as e:
-#             print(f"Error: {e}")
-#             print("Restarting application in 5 seconds...\n")
-#             time.sleep(5)
-
-
 import asyncio
 import time
 from controllers import ProjectsController

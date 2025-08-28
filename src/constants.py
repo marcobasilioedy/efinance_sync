@@ -6,7 +6,7 @@ load_dotenv()
 URL=os.getenv("URL")
 ENTERPRISE=os.getenv("ENTERPRISE")
 STORE=os.getenv("STORE")
-USER=os.getenv("USER")
+USER = "Marco"
 PASSWORD=os.getenv("PASSWORD")
 
 EDY360LOG_URL=os.getenv("EDY360LOG_URL")
