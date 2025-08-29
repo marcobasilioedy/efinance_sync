@@ -59,7 +59,6 @@ class Edy360LogConnector:
             self.__authenticate()
 
         headers = {"Authorization": f"Bearer {self.token}"}
-
         results = []
 
         for i in range(0, len(payloads), batch_size):
@@ -86,7 +85,7 @@ class Edy360LogConnector:
                         self._save_error(payload, error_msg)
                         raise InvalidJsonResponse("edy360log")
 
-                    if not data.get("Successful update"):
+                    if response.status_code != 200:
                         error_msg = f"Falha na atualização: {data}"
                         self._save_error(payload, error_msg)
                         raise ErrorUpdatingProject(data)
