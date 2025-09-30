@@ -1,7 +1,7 @@
 import asyncio
 import logging
 from connectors import EfinanceConnector, Edy360LogConnector
-from utils import GetToken
+from utils import GetToken, normalize_string
 from errors.custom_errors import NotFoundToken
 from constants import STORES
 
@@ -17,27 +17,43 @@ class ProjectsController:
     async def _process_project(self, token: str, project: dict):
         contract_number = project["VME_Contrato"].split("-")[0]
         order_number = project["VME_Cliente"]
+        store = STORES.get(int(project["VME_Loja"]))
 
-        environments_data, reservations_data = await asyncio.gather(
-            self.efinance_connector.get_environments(token, order_number, contract_number),
-            self.efinance_connector.get_reservations(token, order_number, contract_number)
-        )
+        environments_data, reservations_data = [], []
 
+        try:
+            environments_data = await self.efinance_connector.get_environments(
+                token=token,
+                order_number=order_number,
+                contract_number=contract_number,
+                store=project["VME_Loja"]
+            )
+        except Exception as e:
+            logger.warning(f"Failed to fetch environments for {contract_number}: {e}")
 
-        environments, env_codes, lines = [], [], []
+        try:
+            reservations_data = await self.efinance_connector.get_reservations(
+                token=token,
+                order_number=order_number,
+                contract_number=contract_number,
+                store=project["VME_Loja"]
+            )
+        except Exception as e:
+            logger.warning(f"Failed to fetch reservations for {contract_number}: {e}")
+
+        environments, description, env_codes, lines = [], [], [], []
         for env in environments_data:
-            environments.append(env["environment"])
-            env_codes.append(env["env_code"])
-            lines.append(env["line"])
+            environments.append(normalize_string(env.get("environment", "")))
+            description.append(env.get("description", ""))
+            env_codes.append(env.get("env_code", ""))
+            lines.append(env.get("line", ""))
 
         unit_values, total_values, amounts = [], [], []
         for res in reservations_data:
-            unit_values.append(res["unit_value"])
-            total_values.append(res["total_value"])
-            amounts.append(res["amount"])
-
-        store = STORES.get(int(project["VME_Loja"]))
-        
+            unit_values.append(res.get("unit_value", 0))
+            total_values.append(res.get("total_value", 0))
+            amounts.append(res.get("amount", 0))
+            
         payload = {
             "cash_without_indicator": [project["AvistaSemIndicador"]],
             "contract_signature_date": project["CAS_DataAssinatura"],
@@ -149,7 +165,11 @@ class ProjectsController:
             "dle_tooltip": project["tooltipDLE"],
             "assumed_user_tooltip": project["tooltipUsuarioAssumido"],
             "env_codes": env_codes,
-            "environments": environments,
+            "environments": [
+                {"environment": env, "description": desc} 
+                for env, desc in zip(environments, description)
+            ],
+
             "lines": lines,
             "unit_values": unit_values,
             "total_values": total_values,

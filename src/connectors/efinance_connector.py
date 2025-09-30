@@ -24,7 +24,7 @@ class EfinanceConnector:
                 "limit": "100",
                 "Acao": "carregaGrid",
                 "filtroPeriodo": "-1",
-                "loja": "172",
+                "loja": "-1",
                 "equipe": "0",
                 "usuario": "-1",
                 "finVenda": "-1",
@@ -35,7 +35,7 @@ class EfinanceConnector:
                 "codEmpresa": "0",
                 "Loja": "0",
                 "filtroDataDe": "2023-01-01",
-                "filtroDataAte": "2025-08-27"
+                "filtroDataAte": "2025-09-04"
             }
 
             efinance_url = f"{URL}/(S({token}))/comercial/gerenciamento_comercial.aspx"
@@ -50,11 +50,11 @@ class EfinanceConnector:
             print(f"Error getting projects: {e}")
             raise ErrorGetProjects() from e
 
-    async def get_environments(self, token: str, order_number: str, contract_number: str) -> list[dict]:
+    async def get_environments(self, token: str, order_number: str, contract_number: str, store: int) -> list[dict]:
         try:
             data = {
                 "Acao": "carregaGrid",
-                "loja": "172",
+                "loja": store,
                 "cliente": order_number,
                 "contrato": contract_number,
             }
@@ -71,6 +71,7 @@ class EfinanceConnector:
                 {
                     "env_code": item.get("PRO_Opcao"),
                     "environment": item.get("LSI_Descricao"),
+                    "description": item.get("PRO_Ambiente"),
                     "line": item.get("PRO_Linha"),
                 }
                 for item in raw_data
@@ -80,12 +81,12 @@ class EfinanceConnector:
             print(f"Error getting environments: {e}")
             raise ErrorGetProjects() from e
 
-    async def get_reservations(self, token: str, order_number: str, contract_number: str) -> list[dict]:
+    async def get_reservations(self, token: str, order_number: str, contract_number: str, store: int) -> list[dict]:
         try:
             data = {
                 "acao": "carregaGridReserva",
                 "cliente": order_number,
-                "loja": "172",
+                "loja": store,
                 "contrato": contract_number,
                 "Acao": "carregaGrid",
             }
